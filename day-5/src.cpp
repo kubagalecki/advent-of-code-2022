@@ -31,7 +31,7 @@ public:
           break;
         const auto pos = std::distance(std::ranges::begin(line), it);
         const auto stack_ind = (pos - 1) / 4;
-        if (data_.size() <= stack_ind)
+        if (data_.size() <= static_cast<size_t>(stack_ind))
           data_.resize(stack_ind + 1);
         data_[stack_ind].push_back(*it);
       }

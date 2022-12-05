@@ -7,7 +7,7 @@
 auto getCaloryView(std::string_view data) {
   using namespace std::string_view_literals;
   return data | std::views::split("\n\n"sv) |
-         std::views::transform([](auto subr) {
+         std::views::transform([](auto&& subr) {
            auto lines_sz =
                std::forward<decltype(subr)>(subr) | std::views::split("\n"sv) |
                std::views::transform([](auto &&line) {

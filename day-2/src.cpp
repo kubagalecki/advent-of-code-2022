@@ -22,16 +22,22 @@ auto mapToVals(In in_val, const std::array<In, 3> &in,
   return out[std::distance(in.begin(), in_it)];
 }
 
+auto getWinningShape(Shape shape) -> Shape {
+  return mapToVals(shape, shapes, beating_shapes);
+}
+auto getLosingShape(Shape shape) -> Shape {
+  return mapToVals(shape, beating_shapes, shapes);
+}
+
 template <typename R1, typename R2>
 auto getStrategyView(std::string_view data, const std::array<R1, 3> &r1,
                      const std::array<R2, 3> &r2) {
-  using namespace std::string_view_literals;
-  return data | std::views::split("\n"sv) | std::views::filter([](auto &&subr) {
-           return not std::ranges::empty(subr);
-         }) |
+  static constexpr auto map1 = std::array{'A', 'B', 'C'};
+  static constexpr auto map2 = std::array{'X', 'Y', 'Z'};
+  return data | std::views::split("\n"sv) |
+         std::views::take_while(
+             [](auto &&subr) { return not std::ranges::empty(subr); }) |
          std::views::transform([&](auto &&subr) {
-           const auto map1 = std::array{'A', 'B', 'C'};
-           const auto map2 = std::array{'X', 'Y', 'Z'};
            return std::make_pair(
                mapToVals(*std::ranges::cbegin(subr), map1, r1),
                mapToVals(*std::ranges::crbegin(subr), map2, r2));
@@ -43,35 +49,31 @@ int calculateScore(Shape opponent, Shape me) {
   int matchup{};
   if (opponent == me)
     matchup = 3;
-  else if (opponent == mapToVals(me, beating_shapes, shapes))
+  else if (opponent == getLosingShape(me))
     matchup = 6;
   return base + matchup;
 }
 
-void part1() {
-  const auto [alloc, data] = getStdinView();
+void part1(std::string_view data) {
   auto score_view = getStrategyView(data, shapes, shapes) |
                     std::views::transform([](auto pair) {
                       const auto [oppo, me] = pair;
                       return calculateScore(oppo, me);
                     }) |
                     std::views::common;
-  std::cout << std::reduce(std::ranges::begin(score_view),
-                           std::ranges::end(score_view))
-            << '\n';
+  std::cout << std::reduce(score_view.begin(), score_view.end()) << '\n';
 }
 
 Shape calculateChoice(Shape opponent, Outcome expected) {
   if (expected == Outcome::Draw)
     return opponent;
   else if (expected == Outcome::Win)
-    return mapToVals(opponent, shapes, beating_shapes);
+    return getWinningShape(opponent);
   else
-    return mapToVals(opponent, beating_shapes, shapes);
+    return getLosingShape(opponent);
 }
 
-void part2() {
-  const auto [alloc, data] = getStdinView();
+void part2(std::string_view data) {
   auto score_view = getStrategyView(data, shapes, outcomes) |
                     std::views::transform([](auto pair) {
                       const auto [oppo, expected_result] = pair;
@@ -79,12 +81,11 @@ void part2() {
                       return calculateScore(oppo, me);
                     }) |
                     std::views::common;
-  std::cout << std::reduce(std::ranges::begin(score_view),
-                           std::ranges::end(score_view))
-            << '\n';
+  std::cout << std::reduce(score_view.begin(), score_view.end()) << '\n';
 }
 
 int main() {
-  part1();
-  part2();
+  const auto [alloc, data] = getStdinView();
+  part1(data);
+  part2(data);
 }

@@ -19,17 +19,16 @@ size_t firstUniqueAfter(std::string_view input, size_t window_size) {
   return 0;
 }
 
-void part1() {
-  const auto [alloc, data] = getStdinView();
+void part1(std::string_view data) {
   std::cout << firstUniqueAfter(data, 4) << '\n';
 }
 
-void part2() {
-  const auto [alloc, data] = getStdinView();
+void part2(std::string_view data) {
   std::cout << firstUniqueAfter(data, 14) << '\n';
 }
 
 int main() {
-  part1();
-  part2();
+  const auto [alloc, data] = getStdinView();
+  part1(data);
+  part2(data);
 }

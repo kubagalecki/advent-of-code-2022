@@ -8,6 +8,8 @@
 #include <string_view>
 #include <utility>
 
+using namespace std::string_view_literals;
+
 inline auto getStdinView() {
   const auto size = lseek(STDIN_FILENO, 0, SEEK_END);
   const auto ptr = static_cast<char *>(

@@ -5,11 +5,8 @@
 #include <concepts>
 #include <iostream>
 #include <numeric>
-#include <stack>
 #include <string>
 #include <vector>
-
-using namespace std::string_view_literals;
 
 struct Move {
   int from, to, count;
@@ -17,9 +14,7 @@ struct Move {
 
 class Stacks {
 public:
-  Stacks(std::ranges::contiguous_range auto &&text)
-    requires std::same_as<std::ranges::range_value_t<decltype(text)>, char>
-  {
+  Stacks(auto &&text) {
     auto lines = text | std::views::split("\n"sv);
     const auto n_lines = std::ranges::distance(lines);
     for (auto &&line : lines | std::views::take(n_lines - 1)) {
@@ -50,10 +45,9 @@ public:
   void moveSeq(Move move) {
     auto &src = data_[move.from];
     auto &dest = data_[move.to];
-    for (; move.count > 0; --move.count) {
-      dest.push_back(src.back());
-      src.pop_back();
-    }
+    std::ranges::copy(src | std::views::reverse | std::views::take(move.count),
+                      std::back_inserter(dest));
+    src.erase(std::prev(src.end(), move.count), src.end());
   }
   void moveAll(Move move) {
     auto &src = data_[move.from];
@@ -61,8 +55,7 @@ public:
     std::ranges::reverse_copy(src | std::views::reverse |
                                   std::views::take(move.count),
                               std::back_inserter(dest));
-    for (; move.count > 0; --move.count)
-      src.pop_back();
+    src.erase(std::prev(src.end(), move.count), src.end());
   }
 
 private:
@@ -82,8 +75,7 @@ auto parseMove(auto &&line) -> Move {
   return retval;
 }
 
-void part1() {
-  const auto [alloc, data] = getStdinView();
+void part1(std::string_view data) {
   auto parts = data | std::views::split("\n\n"sv);
   auto it = std::ranges::begin(parts);
   auto stacks = Stacks{*it++};
@@ -95,8 +87,7 @@ void part1() {
   std::cout << stacks.getTops() << '\n';
 }
 
-void part2() {
-  const auto [alloc, data] = getStdinView();
+void part2(std::string_view data) {
   auto parts = data | std::views::split("\n\n"sv);
   auto it = std::ranges::begin(parts);
   auto stacks = Stacks{*it++};
@@ -109,6 +100,7 @@ void part2() {
 }
 
 int main() {
-  part1();
-  part2();
+  const auto [alloc, data] = getStdinView();
+  part1(data);
+  part2(data);
 }

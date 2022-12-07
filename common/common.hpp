@@ -21,14 +21,17 @@ inline auto getStdinView() {
   return std::make_pair(std::move(unq_ptr), std::string_view(ptr, size));
 }
 
-int toInt(auto &&str_view) {
-  auto cv = str_view | std::views::common;
-  const auto sz = std::ranges::size(cv);
-  const auto data = std::ranges::data(cv);
-  int i{};
-  std::from_chars(data, std::next(data, sz), i);
-  return i;
+template <typename T>
+T toNumber(auto &&str_range)
+  requires std::integral<T> or std::floating_point<T>
+{
+  const auto str = std::string_view{str_range};
+  T retval{};
+  std::from_chars(str.begin(), str.end(), retval);
+  return retval;
 }
+
+int toInt(auto &&str) { return toNumber<int>(str); }
 
 std::string_view toStringView(std::ranges::contiguous_range auto &&text)
   requires std::same_as<std::ranges::range_value_t<decltype(text)>, char>

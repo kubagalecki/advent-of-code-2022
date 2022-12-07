@@ -14,10 +14,8 @@ auto parseLoHi(auto &&str) -> std::array<int, 2> {
 }
 
 auto getAssignmentsView(std::string_view data) {
-  return data | std::views::split("\n"sv) |
-         std::views::take_while(
-             [](auto &&subr) { return not std::ranges::empty(subr); }) |
-         std::views::transform([](auto &&line) {
+  return splitIntoLinesUntilEmpty(data) |
+         std::views::transform([](std::string_view line) {
            auto pairs = line | std::views::split(","sv);
            auto it = std::ranges::begin(pairs);
            const auto first_lohi = parseLoHi(*it++);

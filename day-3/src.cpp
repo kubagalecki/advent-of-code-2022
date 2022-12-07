@@ -17,15 +17,9 @@ constexpr auto priority_map = std::invoke([] {
   return retval;
 });
 
-auto getRucksackView(std::string_view data) {
-  return data | std::views::split("\n"sv) |
-         std::views::take_while(
-             [](auto &&subr) { return not std::ranges::empty(subr); });
-}
-
 void part1(std::string_view data) {
   auto priority_view =
-      getRucksackView(data) | std::views::transform([](auto &&ruck) {
+      splitIntoLinesUntilEmpty(data) | std::views::transform([](auto &&ruck) {
         std::array<bool, 256> content_map{};
         const auto half_sz = std::ranges::size(ruck) / 2;
         for (auto c : ruck | std::views::take(half_sz))
@@ -42,11 +36,12 @@ void part1(std::string_view data) {
 
 void part2(std::string_view data) {
   std::vector<std::string_view> lines;
-  std::ranges::transform(getRucksackView(data) | std::views::common,
+  std::ranges::transform(splitIntoLinesUntilEmpty(data) | std::views::common,
                          std::back_inserter(lines), [](auto &&subr) {
                            return std::string_view{subr.begin(), subr.end()};
                          });
   int sum{};
+  // No std::views::chunked in gcc12 ...
   for (size_t i = 0; i < lines.size(); i += 3) {
     std::array<std::array<bool, 2>, 256> content_map{};
     for (size_t j = 0;

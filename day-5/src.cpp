@@ -14,8 +14,8 @@ struct Move {
 
 class Stacks {
 public:
-  Stacks(auto &&text) {
-    auto lines = text | std::views::split("\n"sv);
+  Stacks(std::string_view section) {
+    auto lines = splitIntoLinesUntilEmpty(section);
     const auto n_lines = std::ranges::distance(lines);
     for (auto &&line : lines | std::views::take(n_lines - 1)) {
       for (auto it = std::ranges::begin(line), end = std::ranges::end(line);;
@@ -63,7 +63,7 @@ private:
 };
 
 auto parseMove(auto &&line) -> Move {
-  auto words = line | std::views::split(" "sv);
+  auto words = splitLineIntoWordsFilterEmpty(line);
   auto it = std::ranges::begin(words);
   Move retval;
   ++it;
@@ -76,26 +76,26 @@ auto parseMove(auto &&line) -> Move {
 }
 
 void part1(std::string_view data) {
-  auto parts = data | std::views::split("\n\n"sv);
+  auto parts = splitIntoSections(data);
   auto it = std::ranges::begin(parts);
   auto stacks = Stacks{*it++};
-  std::ranges::for_each(
-      *it | std::views::split("\n"sv) | std::views::transform([](auto &&line) {
-        return parseMove(std::forward<decltype(line)>(line));
-      }),
-      [&stacks](Move m) { stacks.moveSeq(m); });
+  std::ranges::for_each(splitIntoLinesUntilEmpty(*it) |
+                            std::views::transform([](std::string_view line) {
+                              return parseMove(line);
+                            }),
+                        [&stacks](Move m) { stacks.moveSeq(m); });
   std::cout << stacks.getTops() << '\n';
 }
 
 void part2(std::string_view data) {
-  auto parts = data | std::views::split("\n\n"sv);
+  auto parts = splitIntoSections(data);
   auto it = std::ranges::begin(parts);
   auto stacks = Stacks{*it++};
-  std::ranges::for_each(
-      *it | std::views::split("\n"sv) | std::views::transform([](auto &&line) {
-        return parseMove(std::forward<decltype(line)>(line));
-      }),
-      [&stacks](Move m) { stacks.moveAll(m); });
+  std::ranges::for_each(splitIntoLinesUntilEmpty(*it) |
+                            std::views::transform([](std::string_view line) {
+                              return parseMove(line);
+                            }),
+                        [&stacks](Move m) { stacks.moveAll(m); });
   std::cout << stacks.getTops() << '\n';
 }
 

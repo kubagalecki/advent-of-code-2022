@@ -21,6 +21,25 @@ inline auto getStdinView() {
   return std::make_pair(std::move(unq_ptr), std::string_view(ptr, size));
 }
 
+inline auto splitIntoSections(std::string_view in) {
+  return in | std::views::split("\n\n"sv) |
+         std::views::transform([](auto &&r) { return std::string_view{r}; });
+}
+
+inline auto splitIntoLinesUntilEmpty(std::string_view in) {
+  return in | std::views::split("\n"sv) |
+         std::views::transform([](auto &&r) { return std::string_view{r}; }) |
+         std::views::take_while(
+             [](std::string_view line) { return not line.empty(); });
+}
+
+inline auto splitLineIntoWordsFilterEmpty(std::string_view line) {
+  return line | std::views::split(" "sv) |
+         std::views::transform([](auto &&r) { return std::string_view{r}; }) |
+         std::views::filter(
+             [](std::string_view word) { return not word.empty(); });
+}
+
 template <typename T>
 T toNumber(auto &&str_range)
   requires std::integral<T> or std::floating_point<T>
@@ -32,10 +51,3 @@ T toNumber(auto &&str_range)
 }
 
 int toInt(auto &&str) { return toNumber<int>(str); }
-
-std::string_view toStringView(std::ranges::contiguous_range auto &&text)
-  requires std::same_as<std::ranges::range_value_t<decltype(text)>, char>
-{
-  auto cv = text | std::views::common;
-  return std::string_view{std::ranges::begin(cv), std::ranges::end(cv)};
-}

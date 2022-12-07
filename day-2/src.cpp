@@ -34,13 +34,11 @@ auto getStrategyView(std::string_view data, const std::array<R1, 3> &r1,
                      const std::array<R2, 3> &r2) {
   static constexpr auto map1 = std::array{'A', 'B', 'C'};
   static constexpr auto map2 = std::array{'X', 'Y', 'Z'};
-  return data | std::views::split("\n"sv) |
-         std::views::take_while(
-             [](auto &&subr) { return not std::ranges::empty(subr); }) |
-         std::views::transform([&](auto &&subr) {
+  return splitIntoLinesUntilEmpty(data) |
+         std::views::transform([&](std::string_view line) {
            return std::make_pair(
-               mapToVals(*std::ranges::cbegin(subr), map1, r1),
-               mapToVals(*std::ranges::crbegin(subr), map2, r2));
+               mapToVals(*std::ranges::cbegin(line), map1, r1),
+               mapToVals(*std::ranges::crbegin(line), map2, r2));
          });
 }
 

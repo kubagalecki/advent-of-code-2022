@@ -5,12 +5,13 @@
 #include <numeric>
 
 auto getCaloryView(std::string_view data) {
-  return data | std::views::split("\n\n"sv) |
-         std::views::transform([](auto &&subr) {
-           auto line_sums =
-               subr | std::views::split("\n"sv) |
-               std::views::transform([](auto &&line) { return toInt(line); }) |
-               std::views::common;
+  return splitIntoSections(data) |
+         std::views::transform([](std::string_view sec) {
+           auto line_sums = splitIntoLinesUntilEmpty(sec) |
+                            std::views::transform([](std::string_view line) {
+                              return toInt(line);
+                            }) |
+                            std::views::common;
            return std::reduce(line_sums.begin(), line_sums.end());
          });
 }

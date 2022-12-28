@@ -1,8 +1,5 @@
 #include "../common/common.hpp"
 
-#include <algorithm>
-#include <array>
-#include <iostream>
 #include <unordered_set>
 
 auto parseMoves(std::string_view data) {

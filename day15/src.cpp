@@ -1,10 +1,3 @@
-#include <algorithm>
-#include <array>
-#include <functional>
-#include <iostream>
-#include <numeric>
-#include <vector>
-
 #include "../common/common.hpp"
 
 using pos_t = std::array<std::int64_t, 2>;

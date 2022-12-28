@@ -1,9 +1,5 @@
 #include "../common/common.hpp"
 
-#include <algorithm>
-#include <array>
-#include <iostream>
-
 class CPU {
   enum struct State : short { Idle, Adding };
 

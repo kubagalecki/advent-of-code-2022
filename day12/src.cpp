@@ -1,14 +1,10 @@
-#include "../common/common.hpp"
-
-#include <algorithm>
 #include <deque>
-#include <functional>
-#include <iostream>
-#include <numeric>
 #include <optional>
 #include <queue>
 #include <unordered_map>
 #include <unordered_set>
+
+#include "../common/common.hpp"
 
 using pos_t = std::array<ptrdiff_t, 2>;
 enum struct DrawResult { yes, no };

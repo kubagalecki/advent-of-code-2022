@@ -1,12 +1,18 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
+#include <algorithm>
+#include <array>
 #include <charconv>
 #include <concepts>
+#include <iostream>
+#include <limits>
 #include <memory>
+#include <numeric>
 #include <ranges>
 #include <string_view>
 #include <utility>
+#include <vector>
 
 using namespace std::string_view_literals;
 

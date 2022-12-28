@@ -1,10 +1,5 @@
 #include "../common/common.hpp"
 
-#include <algorithm>
-#include <array>
-#include <iostream>
-#include <numeric>
-
 auto parseLoHi(auto &&str) -> std::array<int, 2> {
   auto lohi_pairs = str | std::views::split("-"sv);
   auto it = std::ranges::begin(lohi_pairs);

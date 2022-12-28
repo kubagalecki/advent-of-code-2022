@@ -1,11 +1,6 @@
 #include "../common/common.hpp"
 
-#include <algorithm>
-#include <array>
 #include <functional>
-#include <iostream>
-#include <numeric>
-#include <ranges>
 
 constexpr auto priority_map = std::invoke([] {
   std::array<char, 256> retval{};

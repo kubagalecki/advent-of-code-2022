@@ -1,10 +1,5 @@
 #include "../common/common.hpp"
 
-#include <algorithm>
-#include <iostream>
-#include <numeric>
-#include <ranges>
-
 enum struct Shape { Rock, Paper, Scissors };
 enum struct Outcome { Win, Lose, Draw };
 constexpr auto shapes = std::array{Shape::Rock, Shape::Paper, Shape::Scissors};

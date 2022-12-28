@@ -1,11 +1,7 @@
 #include "../common/common.hpp"
 
-#include <algorithm>
 #include <functional>
-#include <iostream>
 #include <map>
-#include <numeric>
-#include <vector>
 
 struct File {
   std::string_view name;
@@ -166,7 +162,7 @@ void part1(const Directory &root) {
           sum += dir.size;
       },
       root);
-  std::cout << "Part 1 solution: " << sum << '\n';
+  std::cout << sum << '\n';
 }
 
 void part2(const Directory &root) {
@@ -183,15 +179,13 @@ void part2(const Directory &root) {
         }
       },
       root);
-  std::cout << "Part 2 solution: " << answer << " (directory " << answer_name
-            << ")\n";
+  std::cout << answer << " (directory " << answer_name << ")\n";
 }
 
 int main() {
   const auto [alloc, data] = getStdinView();
   const auto fs = parseFS(data);
-  print(fs);
-  std::puts("");
+  // print(fs); std::puts("");
   part1(fs);
   part2(fs);
 }

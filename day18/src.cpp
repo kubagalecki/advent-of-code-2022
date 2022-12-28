@@ -1,12 +1,6 @@
-#include <algorithm>
-#include <array>
-#include <iostream>
-#include <limits>
-#include <numeric>
-#include <queue>
-#include <vector>
-
 #include "../common/common.hpp"
+
+#include <queue>
 
 using i64 = std::int64_t;
 using vec_t = std::array<i64, 3>;

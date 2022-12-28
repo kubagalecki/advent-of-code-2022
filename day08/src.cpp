@@ -1,11 +1,5 @@
 #include "../common/common.hpp"
 
-#include <algorithm>
-#include <functional>
-#include <iostream>
-#include <numeric>
-#include <vector>
-
 auto getHeights(std::string_view data) {
   std::vector<char> heights;
   size_t row_size{};

@@ -1,12 +1,7 @@
 #include "../common/common.hpp"
 
-#include <algorithm>
 #include <deque>
 #include <functional>
-#include <iostream>
-#include <limits>
-#include <numeric>
-#include <vector>
 
 using item_t = size_t;
 

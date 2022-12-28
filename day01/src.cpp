@@ -1,9 +1,5 @@
 #include "../common/common.hpp"
 
-#include <algorithm>
-#include <iostream>
-#include <numeric>
-
 auto getCaloryView(std::string_view data) {
   return splitIntoSections(data) |
          std::views::transform([](std::string_view sec) {

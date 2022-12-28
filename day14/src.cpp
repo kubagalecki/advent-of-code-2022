@@ -1,10 +1,3 @@
-#include <algorithm>
-#include <concepts>
-#include <functional>
-#include <iostream>
-#include <numeric>
-#include <vector>
-
 #include "../common/common.hpp"
 
 class Board {

@@ -1,13 +1,7 @@
-#include "../common/common.hpp"
-
-#include <algorithm>
-#include <concepts>
-#include <functional>
-#include <iostream>
-#include <numeric>
 #include <stack>
 #include <variant>
-#include <vector>
+
+#include "../common/common.hpp"
 
 struct List {
   using entry_t = std::variant<List, unsigned>;

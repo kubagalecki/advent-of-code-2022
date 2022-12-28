@@ -1,12 +1,6 @@
 #include "../common/common.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <iostream>
-#include <numeric>
 #include <string>
-#include <vector>
 
 struct Move {
   int from, to, count;

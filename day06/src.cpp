@@ -1,8 +1,5 @@
 #include "../common/common.hpp"
 
-#include <algorithm>
-#include <array>
-#include <iostream>
 #include <span>
 
 bool isUnique(std::span<const char> input) {

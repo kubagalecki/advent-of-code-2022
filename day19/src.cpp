@@ -52,45 +52,43 @@ void pushPossibleMoves(const GameState &state, const Blueprint &blueprint,
   auto &[next_ore_bots, next_clay_bots, next_obsidian_bots, next_geodes_bots] =
       next_state.bots;
 
-  // Buy ore bot
-  if (ore >= blueprint.ore_per_orebot and ore_bots < blueprint.max_ore_cost) {
-    next_ore -= blueprint.ore_per_orebot;
-    ++next_ore_bots;
-    state_stack.push_back(next_state);
-    next_ore += blueprint.ore_per_orebot;
-    --next_ore_bots;
-  }
-
-  // Buy obsidian bot
-  if (ore >= blueprint.ore_per_obsbot and clay >= blueprint.clay_per_obsbot and
-      obsidian_bots < blueprint.obs_per_geodebot) {
-    next_ore -= blueprint.ore_per_obsbot;
-    next_clay -= blueprint.clay_per_obsbot;
-    ++next_obsidian_bots;
-    state_stack.push_back(next_state);
-    next_ore += blueprint.ore_per_obsbot;
-    next_clay += blueprint.clay_per_obsbot;
-    --next_obsidian_bots;
-  } else if // Buy clay bot; obsidian bots are always preferable to clay bots
-      (ore >= blueprint.ore_per_claybot and
-       clay_bots < blueprint.clay_per_obsbot and
-       obsidian_bots < blueprint.obs_per_geodebot) {
-    next_ore -= blueprint.ore_per_claybot;
-    ++next_clay_bots;
-    state_stack.push_back(next_state);
-    next_ore += blueprint.ore_per_claybot;
-    --next_clay_bots;
-  }
-
-  // Buy geode bot
+  // Buy geode bot, if possible this is always the best move
   if (ore >= blueprint.ore_per_geodebot and
       obsidian >= blueprint.obs_per_geodebot) {
     next_ore -= blueprint.ore_per_geodebot;
     next_obsidian -= blueprint.obs_per_geodebot;
     ++next_geodes_bots;
     state_stack.push_back(next_state);
-  } else // Buying a geode bot is always better than doing nothing
+  } else {
+    // Do nothing
     state_stack.push_back(next_state);
+
+    // Buy ore bot
+    if (ore >= blueprint.ore_per_orebot and ore_bots < blueprint.max_ore_cost) {
+      next_ore -= blueprint.ore_per_orebot;
+      ++next_ore_bots;
+      state_stack.push_back(next_state);
+      next_ore += blueprint.ore_per_orebot;
+      --next_ore_bots;
+    }
+
+    // Buy obsidian bot
+    if (ore >= blueprint.ore_per_obsbot and
+        clay >= blueprint.clay_per_obsbot and
+        obsidian_bots < blueprint.obs_per_geodebot) {
+      next_ore -= blueprint.ore_per_obsbot;
+      next_clay -= blueprint.clay_per_obsbot;
+      ++next_obsidian_bots;
+      state_stack.push_back(next_state);
+    } else if // Buy clay bot; obsidian bots are always preferable to clay bots
+        (ore >= blueprint.ore_per_claybot and
+         clay_bots < blueprint.clay_per_obsbot and
+         obsidian_bots < blueprint.obs_per_geodebot) {
+      next_ore -= blueprint.ore_per_claybot;
+      ++next_clay_bots;
+      state_stack.push_back(next_state);
+    }
+  }
 }
 
 u16 getMaxGeodes(const Blueprint &blueprint, u16 time) {
